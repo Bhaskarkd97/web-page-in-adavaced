@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Advanced Web Project</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f8;
+      color: #333;
+    }
+
+    header, footer {
+      background-color: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    form input, form textarea, form button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #04AA6D;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #037a53;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 10px;
+    }
+
+    li {
+      background: #f9f9f9;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .remove-btn {
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 5px;
+    }
+
+    .carousel {
+      text-align: center;
+    }
+
+    .carousel img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .carousel-controls {
+      margin-top: 10px;
+    }
+
+    .carousel-controls button {
+      margin: 0 5px;
+    }
+
+    .quiz-question {
+      margin-bottom: 10px;
+    }
+
+    .quiz-question p {
+      margin-bottom: 5px;
+    }
+
+    .api-data {
+      background: #ecf0f1;
+      padding: 10px;
+      border-radius: 5px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Advanced Web Project</h1>
+    <p>Responsive Design | DOM | API | Carousel | Quiz</p>
+  </header>
+
+  <div class="container">
+    <!-- Contact Form -->
+    <div class="card">
+      <h2>Contact Form</h2>
+      <form onsubmit="return validateForm()">
+        <input type="text" id="name" placeholder="Name" />
+        <input type="email" id="email" placeholder="Email" />
+        <textarea id="message" rows="4" placeholder="Your message"></textarea>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+
+    <!-- To-Do List -->
+    <div class="card">
+      <h2>To-Do List</h2>
+      <input type="text" id="taskInput" placeholder="Enter task" />
+      <button onclick="addTask()">Add</button>
+      <ul id="taskList"></ul>
+    </div>
+
+    <!-- Image Carousel -->
+    <div class="card carousel">
+      <h2>Image Carousel</h2>
+      <img id="carouselImg" src="https://picsum.photos/id/1015/600/300" alt="Carousel" />
+      <div class="carousel-controls">
+        <button onclick="prevImage()">Previous</button>
+        <button onclick="nextImage()">Next</button>
+      </div>
+    </div>
+
+    <!-- Quiz -->
+    <div class="card">
+      <h2>Interactive Quiz</h2>
+      <div class="quiz-question">
+        <p>1. What does CSS stand for?</p>
+        <button onclick="checkAnswer(this, true)">Cascading Style Sheets</button>
+        <button onclick="checkAnswer(this, false)">Computer Style Sheet</button>
+      </div>
+      <div class="quiz-question">
+        <p>2. Inside which HTML element do we put the JavaScript?</p>
+        <button onclick="checkAnswer(this, true)">&lt;script&gt;</button>
+        <button onclick="checkAnswer(this, false)">&lt;javascript&gt;</button>
+      </div>
+    </div>
+
+    <!-- API Joke Display -->
+    <div class="card">
+      <h2>Joke Generator (API)</h2>
+      <button onclick="fetchJoke()">Get a Joke</button>
+      <div class="api-data" id="jokeBox">Click the button to get a random joke!</div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Bhaskar | Advanced Web Practice
+  </footer>
+
+  <script>
+    // Form Validation
+    function validateForm() {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const message = document.getElementById('message').value.trim();
+      const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+      if (!name || !email || !message) {
+        alert('Please fill in all fields.');
+        return false;
+      }
+
+      if (!emailRegex.test(email)) {
+        alert('Invalid email format.');
+        return false;
+      }
+
+      alert('Form submitted!');
+      return true;
+    }
+
+    // To-Do List
+    function addTask() {
+      const taskInput = document.getElementById('taskInput');
+      const taskText = taskInput.value.trim();
+      if (!taskText) {
+        alert('Please enter a task.');
+        return;
+      }
+
+      const li = document.createElement('li');
+      li.textContent = taskText;
+
+      const btn = document.createElement('button');
+      btn.textContent = 'Remove';
+      btn.className = 'remove-btn';
+      btn.onclick = () => li.remove();
+
+      li.appendChild(btn);
+      document.getElementById('taskList').appendChild(li);
+      taskInput.value = '';
+    }
+
+    // Carousel
+    const images = [
+      'https://picsum.photos/id/1015/600/300',
+      'https://picsum.photos/id/1016/600/300',
+      'https://picsum.photos/id/1018/600/300',
+      'https://picsum.photos/id/1025/600/300'
+    ];
+    let current = 0;
+
+    function showImage(index) {
+      const img = document.getElementById('carouselImg');
+      img.src = images[index];
+    }
+
+    function nextImage() {
+      current = (current + 1) % images.length;
+      showImage(current);
+    }
+
+    function prevImage() {
+      current = (current - 1 + images.length) % images.length;
+      showImage(current);
+    }
+
+    // Quiz
+    function checkAnswer(button, isCorrect) {
+      if (isCorrect) {
+        button.style.backgroundColor = 'green';
+        alert('Correct!');
+      } else {
+        button.style.backgroundColor = 'red';
+        alert('Wrong Answer!');
+      }
+    }
+
+    // API Joke Fetch
+    async function fetchJoke() {
+      const res = await fetch('https://official-joke-api.appspot.com/random_joke');
+      const data = await res.json();
+      document.getElementById('jokeBox').innerText = `${data.setup} — ${data.punchline}`;
+    }
+  </script>
+</body>
+</html>
